@@ -1,136 +1,87 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import {AuthApi} from '../shared/Api'
+import { AuthApi } from '../shared/Api';
 
-// 닉네임 정규식
-const nicknameRegex = /^[A-Za-z0-9]{3,}$/;
-// 비밀번호 정규식
+//emaill 정규식 적용
+const emailRegex = /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
 const passwordRegex = /^.{4,}$/;
-// 오류 메세지
 const alertMessage = {
-  nickErr: "닉네임 규칙에 어긋납니다! (영문과 숫자를 사용하여 3글자 이상)",
+  emailErr: "닉네임 규칙에 어긋납니다!",
   pwErr: "비밀번호 규칙에 어긋납니다!!(4글자 이상)",
   pwMachErr: "패스워드가 불일치합니다.",
 };
 
+
 function Register() {
-  const [nickName, setNickName] = useState({
-    value: "",
-    err: null,
-  });
-  const [password, setPassword] = useState({
-    value: "",
-    err: null,
-  });
-  const [confirmPassword, setConfirmPassword] = useState({
-    value: "",
-    err: null,
-  });
+  const [email, setEmail] = useState({ value: "", err: null });
+  const [password, setPassword] = useState({ value: "", err: null });
+  const [confirmPassword, setConfirmPassword] = useState({ value: "", err: null });
 
-  const onNickNameChangeHandler = (event) => {
-    const inputNickName = event.target.value;
-    setNickName((prevNickName) => ({
-      ...prevNickName,
-      value: inputNickName,
-    }));
+  const handleEmailChange = (event) => {
+    const inputEmail = event.target.value;
+    setEmail((prevEmail) => ({ ...prevEmail, value: inputEmail }));
   };
 
-  const onPasswordChangeHandler = (event) => {
+  const handlePasswordChange = (event) => {
     const inputPassword = event.target.value;
-    setPassword((prevPassword) => ({
-      ...prevPassword,
-      value: inputPassword,
-    }));
+    setPassword((prevPassword) => ({ ...prevPassword, value: inputPassword }));
   };
 
-  const onConfirmPasswordChangeHandler = (event) => {
+  const handleConfirmPasswordChange = (event) => {
     const inputConfirmPassword = event.target.value;
-    setConfirmPassword((prevConfimPw) => ({
-      ...prevConfimPw,
-      value: inputConfirmPassword,
-    }));
+    setConfirmPassword((prevConfimPw) => ({ ...prevConfimPw, value: inputConfirmPassword }));
   };
 
-  const verifySiginUpData = () => {
-    // 유효성 검사 결과 저장
-    const verifiedNickname = nicknameRegex.test(nickName.value);
-    const verifiedPassword = passwordRegex.test(password.value);
-    const verifiedConfirmPassword = password.value === confirmPassword.value;
-    
-    setNickName((prevNickName) => ({
-      ...prevNickName,
-      err: !verifiedNickname,
-    }));
-    // 비밀번호 유효성 검사
-    setPassword((prevPassword) => ({
-      ...prevPassword,
-      err: !verifiedPassword,
-    }));
-    // 비밀번호 재입력 일치 여부 검사
-    setConfirmPassword((prevConfimPw) => ({
-      ...prevConfimPw,
-      err: !verifiedConfirmPassword,
-    }));
-    return !verifiedNickname || !verifiedPassword || !verifiedConfirmPassword
-      ? false
-      : true;
-  };
-  const onSubmitHandler = async() => {
-    const signUpVerfy = verifySiginUpData();
-    if (signUpVerfy) {  // 회원 가입 요청 가능
+  const validateSignUpData = () => {
+    const isEmailValid = emailRegex.test(email.value);
+    const isPasswordValid = passwordRegex.test(password.value);
+    const doPasswordsMatch = password.value === confirmPassword.value;
 
+    setEmail((prevEmail) => ({ ...prevEmail, err: !isEmailValid }));
+    setPassword((prevPassword) => ({ ...prevPassword, err: !isPasswordValid }));
+    setConfirmPassword((prevConfimPw) => ({ ...prevConfimPw, err: !doPasswordsMatch }));
+
+    return isEmailValid && isPasswordValid && doPasswordsMatch;
+  };
+
+  const handleSubmit = async () => {
+    const isSignUpValid = validateSignUpData();
+
+    if (isSignUpValid) {
       try {
-        const res = await AuthApi.signup({nickname:nickName.value, password:password.value})
-        console.log(res)  
+        const res = await AuthApi.signup({ email: email.value, password: password.value });
+        console.log(res);
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
-      
-   
-
-      return;
     } else {
-      // 회원가입 부적합으로 함수 종료
       return;
     }
   };
+
   return (
     <StSignupContainer>
-      <h1>회원가입</h1>
+      <h1>Sign up</h1>
       <label>
-        닉네임 :
-        <StAlertBox>{nickName.err ? alertMessage.nickErr : null}</StAlertBox>
+        Email:
+        <StAlertBox>{email.err ? alertMessage.emailErr : null}</StAlertBox>
       </label>
-      <input
-        type="text"
-        placeholder="My Nickname"
-        onChange={onNickNameChangeHandler}
-      />
+      <input type="text" placeholder="Email" onChange={handleEmailChange} />
       <label>
-        비밀번호 :
+        Password:
         <StAlertBox>{password.err ? alertMessage.pwErr : null}</StAlertBox>
       </label>
-      <input
-        type="password"
-        placeholder="Password"
-        onChange={onPasswordChangeHandler}
-      />
+      <input type="password" placeholder="Password" onChange={handlePasswordChange} />
       <label>
-        비밀번호 재입력 :
-        <StAlertBox>
-          {confirmPassword.err ? alertMessage.pwMachErr : null}
-        </StAlertBox>
+        Confirm Password:
+        <StAlertBox>{confirmPassword.err ? alertMessage.pwMachErr : null}</StAlertBox>
       </label>
-      <input
-        type="password"
-        placeholder="Confirm Password"
-        onChange={onConfirmPasswordChangeHandler}
-      />
+      <input type="password" placeholder="Confirm Password" onChange={handleConfirmPasswordChange} />
       <div>
-        <StBtn onClick={onSubmitHandler}>회원가입</StBtn>
+        <StBtn onClick={handleSubmit}>Sign Up</StBtn>
         <Link to={"/"}>
-          <StBtn>취소</StBtn>
+          <StBtn>Cancel</StBtn>
         </Link>
       </div>
     </StSignupContainer>
