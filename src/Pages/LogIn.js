@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { AuthApi } from "../shared/Api";
 
 function LogIn() {
-  const [nickName, setNickName] = useState({
+  const [email, setEmail] = useState({
     value: "",
     err: null,
   });
@@ -13,11 +13,11 @@ function LogIn() {
     err: null,
   });
 
-  const onNickNameChangeHandler = (event) => {
-    const inputNickName = event.target.value;
-    setNickName((prevNickName) => ({
-      ...prevNickName,
-      value: inputNickName,
+  const onEmailChangeHandler = (event) => {
+    const inputEmail = event.target.value;
+    setEmail((prevEmail) => ({
+      ...prevEmail,
+      value: inputEmail,
     }));
   };
 
@@ -29,35 +29,36 @@ function LogIn() {
     }));
   };
 
-  const onSubmitHandler = async() => {
-  if(nickName.value && password.value) {
-    alert("로그인 !!")
+  const onSubmitHandler = async () => {
+    if (email.value && password.value) {
+      alert("Log in!");
 
-    try {
-      const res = await AuthApi.signin({nickname:nickName.value, password:password.value})
-      console.log(res)  
-    } catch (err) {
-      console.log(err)
+      try {
+        const res = await AuthApi.signin({
+          email: email.value,
+          password: password.value,
+        });
+        console.log(res);
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      alert("Please enter your email and password.");
+      return;
     }
+  };
 
-  } else {
-    alert("닉네임 또는 비밀번호가 입력되지 않았습니다.")
-    return;
-  }
-
-    
-  }
   return (
-    <StContiner>
-      <h1>로그인</h1>
-      <label>Nickname</label>
+    <Container>
+      <h1>Log In</h1>
+      <label>Email</label>
       <input
         type="text"
-        value={nickName.value}
-        placeholder="Type your Nickname"
-        onChange={onNickNameChangeHandler}
+        value={email.value}
+        placeholder="Type your Email"
+        onChange={onEmailChangeHandler}
       />
-      <label>비밀번호</label>
+      <label>Password</label>
       <input
         type="password"
         value={password.value}
@@ -65,20 +66,23 @@ function LogIn() {
         onChange={onPasswordChangeHandler}
       />
       <div>
-        <StBtn type="submit" onClick={onSubmitHandler}>로그인</StBtn>
+        <Button type="submit" onClick={onSubmitHandler}>
+          Log In
+        </Button>
         <Link to={"/signup"}>
-          <StBtn type="button">회원가입</StBtn>
+          <Button type="button">Sign Up</Button>
         </Link>
         <Link to={"/"}>
-          <StBtn type="button">뒤로가기</StBtn>
+          <Button type="button">Go Back</Button>
         </Link>
       </div>
-    </StContiner>
+    </Container>
   );
 }
+
 export default LogIn;
 
-const StContiner = styled.div`
+const Container = styled.div`
   max-width: 1200px;
   margin: 15px auto;
   padding: 20px;
@@ -91,6 +95,6 @@ const StContiner = styled.div`
   border: 3px solid black;
 `;
 
-const StBtn = styled.button`
+const Button = styled.button`
   margin: 5px;
 `;
