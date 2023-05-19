@@ -11,6 +11,6 @@ export const api = axios.create({
 
 
 export const AuthApi = {
-    signin: (payload)=> api.post('/signin', payload),
+    Login: (payload)=> api.post('/signin', payload),
     signup: (payload)=> api.post('/register', payload),
 }

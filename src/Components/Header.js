@@ -10,7 +10,7 @@ function Header() {
           <Link to = "/login">로그인</Link>
         </HeaderItems>
       <HeaderItems>
-      <Link to = "/Signup">회원가입</Link>
+      <Link to = "/register">회원가입</Link>
         </HeaderItems>
       <HeaderName>3조</HeaderName>
     </Section>
