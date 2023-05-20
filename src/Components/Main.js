@@ -1,10 +1,9 @@
 import React from 'react';
 import Header from './Header';
 import Form from './Form';
-import ListWorking from './ListWorking';
-// import ListDone from './ListDone';
 import GlobalStyle from '../GlobalStyle';
 import styled from 'styled-components';
+import Posts from '../Pages/Posts';
 
 function Main() {
   return (
@@ -13,14 +12,13 @@ function Main() {
       <Wrap>
         <Header />
         <Form />
-        <ListWorking />
-        {/* <ListDone /> */}
+        <Posts />
       </Wrap>
     </>
-  )
+  );
 }
 
-export default Main
+export default Main;
 
 const Wrap = styled.div`
   max-width: 1200px;
