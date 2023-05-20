@@ -7,7 +7,7 @@ import { AuthApi } from '../shared/Api';
 const emailRegex = /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
 const passwordRegex = /^.{4,}$/;
 const alertMessage = {
-  emailErr: "닉네임 규칙에 어긋납니다!",
+  emailErr: "이메일 규칙에 어긋납니다!",
   pwErr: "비밀번호 규칙에 어긋납니다!!(4글자 이상)",
   pwMachErr: "패스워드가 불일치합니다.",
 };
